@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/pizzas")
@@ -39,6 +38,26 @@ public class PizzaController {
 
     @PostMapping()
     public ResponseEntity<PizzaEntity> guardar(@RequestBody PizzaEntity pizza){
-        return new ResponseEntity<>(pizzaService.save(pizza),  HttpStatus.OK);
+        if(pizza.getIdPizza()==null || !pizzaService.exists(pizza.getIdPizza())){
+            return new ResponseEntity<>(pizzaService.save(pizza),  HttpStatus.OK);
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
+    @PutMapping()
+    public ResponseEntity<PizzaEntity> actualizar(@RequestBody PizzaEntity pizza){
+        if(!(pizza.getIdPizza() ==null) || pizzaService.exists(pizza.getIdPizza())){
+            return new ResponseEntity<>(pizzaService.save(pizza),  HttpStatus.OK);
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
+    @DeleteMapping("/{idPizza}")
+    public ResponseEntity<Void> eliminarById(@PathVariable int idPizza) {
+        if (pizzaService.exists(idPizza)) {
+            pizzaService.delete(idPizza);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().build();
     }
 }

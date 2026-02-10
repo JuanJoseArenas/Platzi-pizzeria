@@ -36,6 +36,29 @@ public class PizzaController {
 
     }
 
+    @GetMapping("/available")
+    public ResponseEntity<List<PizzaEntity>> consultarByAvailable(){
+        return new ResponseEntity<>(pizzaService.getAvailable(),HttpStatus.OK);
+
+    }
+
+    @GetMapping("/name/{name}")
+    public ResponseEntity<PizzaEntity> consultarByName(@PathVariable String name){
+        return new ResponseEntity<>(pizzaService.getByName(name),HttpStatus.OK);
+
+    }
+
+    @GetMapping("/description/{description}")
+    public ResponseEntity<List<PizzaEntity>> consultarByContaining(@PathVariable String description){
+        return new ResponseEntity<>(pizzaService.getContaining(description),HttpStatus.OK);
+
+    }
+
+    @GetMapping("/Notdescription/{description}")
+    public ResponseEntity<List<PizzaEntity>> consultarByNotContaining(@PathVariable String description){
+        return new ResponseEntity<>(pizzaService.getNotContaining(description),HttpStatus.OK);
+    }
+
     @PostMapping()
     public ResponseEntity<PizzaEntity> guardar(@RequestBody PizzaEntity pizza){
         if(pizza.getIdPizza()==null || !pizzaService.exists(pizza.getIdPizza())){

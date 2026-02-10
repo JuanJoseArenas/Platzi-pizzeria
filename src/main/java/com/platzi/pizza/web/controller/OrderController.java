@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/order")
@@ -25,10 +24,18 @@ public class OrderController {
         return new ResponseEntity<>(this.orderService.getAll(), HttpStatus.OK);
     }
 
+    @GetMapping("/today")
+    public ResponseEntity<List<OrderEntity>> getByOrderByDate(){
+        return new ResponseEntity<>(this.orderService.getByDate(), HttpStatus.OK);
+    }
+
     @GetMapping("/{idOrder}")
-    public ResponseEntity<OrderEntity> getAll(@PathVariable int idOrder){
-        return orderService.getById(idOrder).map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<OrderEntity> getAllByID(@PathVariable int idOrder){
+        return ResponseEntity.ok(this.orderService.getById(idOrder));
+    }
+    @GetMapping("/outside")
+    public ResponseEntity<List<OrderEntity>> getAllByMethod(){
+        return ResponseEntity.ok(this.orderService.getByMethod());
 
     }
 }

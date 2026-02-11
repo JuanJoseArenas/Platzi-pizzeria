@@ -3,6 +3,7 @@ package com.platzi.pizza.web.controller;
 import com.platzi.pizza.persistence.entity.PizzaEntity;
 import com.platzi.pizza.service.PizzaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,12 +22,13 @@ public class PizzaController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PizzaEntity>> consultar(){
-        List<PizzaEntity> pizzas = pizzaService.getAll();
+    public ResponseEntity<Page<PizzaEntity>> consultar(@RequestParam(defaultValue = "0") int page,
+                                                       @RequestParam (defaultValue = "8") int elements){
+        Page<PizzaEntity> pizzas = pizzaService.getAll(page, elements);
         if(pizzas.isEmpty()){
             return ResponseEntity.noContent().build();
         }
-        return new ResponseEntity<>(pizzaService.getAll(), HttpStatus.OK);
+        return new ResponseEntity<>(pizzaService.getAll(page,elements), HttpStatus.OK);
 
     }
     @GetMapping("/{idPizza}")
@@ -37,14 +39,29 @@ public class PizzaController {
     }
 
     @GetMapping("/available")
-    public ResponseEntity<List<PizzaEntity>> consultarByAvailable(){
-        return new ResponseEntity<>(pizzaService.getAvailable(),HttpStatus.OK);
+    public ResponseEntity<Page<PizzaEntity>> consultarByAvailable(@RequestParam(defaultValue = "0") int page,
+                                                                  @RequestParam (defaultValue = "8") int elements,
+                                                                  @RequestParam (defaultValue = "price")String sortBy,
+                                                                  @RequestParam (defaultValue = "ASC") String sortDirection){
+        return new ResponseEntity<>(pizzaService.getAvailable(page,elements,sortBy,sortDirection),HttpStatus.OK);
 
     }
 
     @GetMapping("/name/{name}")
     public ResponseEntity<PizzaEntity> consultarByName(@PathVariable String name){
         return new ResponseEntity<>(pizzaService.getByName(name),HttpStatus.OK);
+
+    }
+
+    @GetMapping("/price/{price}")
+    public ResponseEntity<List<PizzaEntity>> consultar3ByPrice(@PathVariable double price){
+        return new ResponseEntity<>(pizzaService.getcheapest(price),HttpStatus.OK);
+
+    }
+
+    @GetMapping("/names/{name}")
+    public ResponseEntity<PizzaEntity> consultarFirstByName(@PathVariable String name){
+        return new ResponseEntity<>(pizzaService.getFirstByName(name),HttpStatus.OK);
 
     }
 

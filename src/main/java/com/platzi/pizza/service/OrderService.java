@@ -1,6 +1,7 @@
 package com.platzi.pizza.service;
 
 import com.platzi.pizza.persistence.entity.OrderEntity;
+import com.platzi.pizza.persistence.projecction.OrderSummary;
 import com.platzi.pizza.persistence.repository.OrderRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,13 @@ public class OrderService {
         return this.orderRepository.findAllByMethodIn(methods);
     }
 
+    public List<OrderEntity> getOrderByIdCustomer(String idCustomer){
+        return this.orderRepository.findCustomerOrders(idCustomer);
+    }
+
+    public OrderSummary getSummary(int orderId){
+        return this.orderRepository.findSummary(orderId);
+    }
 
     public OrderEntity getById(int idOrder){
         return this.orderRepository.findById(idOrder)

@@ -45,6 +45,7 @@ public class OrderEntity {
 
 
     @OneToMany(mappedBy = "order")
+    @OrderBy("price ASC ")
     private List<OrderItemEntity> items;
 
 }

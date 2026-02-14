@@ -1,0 +1,34 @@
+package com.platzi.pizza.persistence.audit;
+
+import com.platzi.pizza.persistence.entity.PizzaEntity;
+import jakarta.persistence.PostLoad;
+import jakarta.persistence.PostPersist;
+import jakarta.persistence.PostUpdate;
+import jakarta.persistence.PreRemove;
+import org.springframework.util.SerializationUtils;
+
+import java.io.Serializable;
+
+public class AuditPizzaListener {
+
+    private PizzaEntity currentValue;
+    @PostLoad
+    private void postLoad(PizzaEntity entity){
+        System.out.println("POST LOAD");
+        this.currentValue= entity;
+        this.currentValue= SerializationUtils.clone(entity);
+    }
+
+    @PostPersist
+    @PostUpdate
+    public void onPostPersist(PizzaEntity entity){
+        System.out.println("POST PERSIST OR UPDATE");
+        System.out.println("OLD VALUE: "+ this.currentValue.toString());
+        System.out.println("POST VALUE" + entity.toString());
+    }
+    @PreRemove
+    public void onPreDelete(PizzaEntity entity){
+        System.out.println(entity.toString());
+
+    }
+}
